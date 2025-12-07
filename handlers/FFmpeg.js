@@ -27,14 +27,20 @@ async function init () {
     message = message.trim();
 
     const parts = message.split(" ");
+    if (parts.length < 2) return;
+
+    const flags = parts[0];
+    const description = parts.slice(2).join(" ");
+    const extension = parts[1].split(",")[0];
+
     supportedFormats.push({
-      name: parts.slice(2).join(" "),
+      name: description,
       format: parts[1],
-      extension: parts[1],
-      mime: "video/" + parts[1],
-      from: parts[0].includes("D"),
-      to: parts[0].includes("E"),
-      internal: parts[1]
+      extension: extension,
+      mime: "video/" + extension,
+      from: flags.includes("D"),
+      to: flags.includes("E"),
+      internal: extension
     });
 
   };
