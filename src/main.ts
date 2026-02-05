@@ -186,11 +186,17 @@ async function buildOptionList () {
 
       allOptions.push({ format, handler });
 
-      // In simple mode, display each input/output MIME type only once
+      // In simple mode, display each input/output format only once
       let addToInputs = true, addToOutputs = true;
       if (simpleMode) {
-        addToInputs = !Array.from(ui.inputList.children).some(c => c.getAttribute("mime-type") === format.mime);
-        addToOutputs = !Array.from(ui.outputList.children).some(c => c.getAttribute("mime-type") === format.mime);
+        addToInputs = !Array.from(ui.inputList.children).some(c => {
+          const currFormat = allOptions[parseInt(c.getAttribute("format-index") || "")]?.format;
+          return currFormat?.mime === format.mime && currFormat?.format === format.format;
+        });
+        addToOutputs = !Array.from(ui.outputList.children).some(c => {
+          const currFormat = allOptions[parseInt(c.getAttribute("format-index") || "")]?.format;
+          return currFormat?.mime === format.mime && currFormat?.format === format.format;
+        });
         if ((!format.from || !addToInputs) && (!format.to || !addToOutputs)) continue;
       }
 
